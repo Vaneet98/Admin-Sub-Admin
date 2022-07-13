@@ -1,0 +1,109 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger test API",
+    "description": "This is assignment of Admin/sub-Admin done by vaneet kumar",
+    "contact": { "email": "vaneet.k@applify.co" },
+    "license": {
+      "name": "",
+      "url": ""
+    }
+  },
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "paths": {
+    "/admin/registration": {
+      "post": {
+        "summary": "Registeration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+                
+               
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/admin/view": {
+      "get": {
+        "summary": "Return the list of all the user",
+        "description": "It is list of all user details",
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/admin/view/{adminId}": {
+      "get": {
+        "summary": "Get detail of specific user",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "adminId",
+            "required": true,
+            "description": "Specific user detail"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/admin/blocked": {
+      "get": {
+        "summary": "Blocked not-blocked and not deleted user detail",
+        "description": "Blocked not-blocked and not deleted user detail",
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/admin/filter/{id}": {
+      "get": {
+        "summary": "filter on the based on blocked or not_blocked (blocked=1 and not_blocked=0",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "filter on the based on blocked or not_blocked (blocked=1 and not_blocked=0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}
