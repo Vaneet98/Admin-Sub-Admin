@@ -14,6 +14,7 @@ module.exports = {
       email: Joi.string().email().required(),
       password: Joi.string().required(),
       title: Joi.string(),
+      IsAdmin: Joi.number().integer(),
       RegistrationPermission: Joi.number().integer(),
       BlockedPermission : Joi.number().integer(),
       UnblockedPermission : Joi.number().integer(),
@@ -27,6 +28,7 @@ module.exports = {
       let adminData = {
         name: data.name,
         title: data.title,
+        IsAdmin:data.IsAdmin,
         email: data.email,
         password: data.password,
         RegistrationPermission:data.RegistrationPermission,
@@ -48,6 +50,7 @@ module.exports = {
             let admindata = {
               name: data.name,
               title: data.title,
+              IsAdmin:data.IsAdmin,
               email: data.email,
               password: hashPassword,
               RegistrationPermission:data.RegistrationPermission,
@@ -58,12 +61,12 @@ module.exports = {
             };
             let admin = await Service.AdminService.addAdmin(admindata);
             //Dynamic message send on mail
-            let info = await transporter.sendMail({
-              from: process.env.EMAIL_FROM,
-              to: data.email,
-              subject: "Registration successfull",
-              html: `<p>Hi <b>${data.name}</b>, Thank you for registering with <b>Applify</b></p>`,
-            });
+            // let info = await transporter.sendMail({
+            //   from: process.env.EMAIL_FROM,
+            //   to: data.email,
+            //   subject: "Registration successfull",
+            //   html: `<p>Hi <b>${data.name}</b>, Thank you for registering with <b>Applify</b></p>`,
+            // });
             return {
               status: "Success",
               message: "Registeration successfull",
@@ -108,18 +111,27 @@ module.exports = {
   },
   deleteperson: async (data) => {
     const datas = {
-      name: data.name,
+      adminId: data.adminId,
     };
-    let user = await Service.AdminService.deleteperson(datas);
+    let users = await Service.AdminService.get(datas);
+    if(users){
+      let user = await Service.AdminService.deleteperson(datas);
+      return {
+        status: "Success",
+        message: "Sucessfull delete the user",
+        user: user,
+      };
+    }
     return {
-      status: "Success",
-      message: "Sucessfull delete the user",
+      status: "falied",
+      message: "User not register",
       user: user,
     };
+   
   },
   block: async (d) => {
     let data = {
-      name: d.name,
+      adminId: d.adminId,
     };
     let user = await Service.AdminService.get(data);
     if (user) {
@@ -137,7 +149,7 @@ module.exports = {
   },
   unblock: async (d) => {
     let data = {
-      name: d.name,
+      adminId: d.adminId,
     };
     let user = await Service.AdminService.get(data);
     if (user) {
@@ -201,6 +213,7 @@ module.exports = {
               status: "Success",
               message: "Login success",
               token: token,
+              adminId:useremail.adminId
             };
           } else {
             return {
@@ -220,13 +233,13 @@ module.exports = {
   },
   edit: async (d) => {
     let data = {
-      name: d.name,
+      adminId: d.adminId,
       RegistrationPermission: d.RegistrationPermission,
       BlockedPermission:d.BlockedPermission,
       UnblockedPermission:d.UnblockedPermission,
       DeletedPermission:d.DeletedPermission,
       EditPermission:d.EditPermission,
-      email: d.email,
+  
     };
     let user = await Service.AdminService.get(data);
     if (user) {

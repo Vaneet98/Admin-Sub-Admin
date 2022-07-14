@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller");
-const IsAdmin= require("../middleware/IsAdmin.js")
+ const IsAdmin= require("../middleware/IsAdmin.js")
 const IsAuth= require("../middleware/IsAuth.js")
 const RegPermission= require("../middleware/RegPermi.js")
 const BlockPermis= require("../middleware/BlockPermis.js")
@@ -20,6 +20,12 @@ router.post("/registration",IsAuth,RegPermission,async (req, res) => {
   let admin = await controller.AdminRegister.Registration(req.body);
   res.json(admin);
 });
+
+//login admin and sub-admin
+router.post("/login",async(req,res)=>{
+  let user= await controller.AdminRegister.loginAdmin(req.body)
+  res.json(user);
+})
 
 //Blocked not-blocked and not deleted user detail
 router.get("/blocked",async(req,res)=>{
@@ -45,12 +51,6 @@ router.get("/view/:adminId",async(req,res)=>{
   res.json(user)
 })
 
-//Delete user
-router.delete("/delete",IsAuth, deletePermis,async(req,res)=>{
-  let user= await controller.AdminRegister.deleteperson(req.body);
-  res.json(user)
-})
-
 //Admin can block the user
 
 router.put("/block",IsAuth, BlockPermis,async(req,res)=>{
@@ -64,16 +64,18 @@ router.put("/unblock",IsAuth, unblockPermis,async(req,res)=>{
   res.json(user)
 })
 
-//login admins
-router.post("/login",async(req,res)=>{
-  let user= await controller.AdminRegister.loginAdmin(req.body)
-  res.json(user);
-})
 
 //admin edit the details
-router.put("/edit",IsAdmin, EditPermis,async(req,res)=>{
+router.put("/edit",IsAuth, EditPermis,async(req,res)=>{
   let user= await controller.AdminRegister.edit(req.body)
   res.json(user)
 })
+
+//Delete user
+router.delete("/delete",IsAuth, deletePermis,async(req,res)=>{
+  let user= await controller.AdminRegister.deleteperson(req.body);
+  res.json(user)
+})
+
 
 module.exports = router;

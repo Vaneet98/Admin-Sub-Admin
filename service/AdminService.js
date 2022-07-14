@@ -65,7 +65,7 @@ exports.findNotblockeds = () => {
 exports.view = () => {
   return Model.AdminRegister.findAll({
     attributes: {
-      exclude: [ "password", "blocked", "deleted"],
+      exclude: ["password", "blocked", "deleted"],
     },
   });
 };
@@ -73,13 +73,16 @@ exports.view = () => {
 exports.viewperson = (data) => {
   return Model.AdminRegister.findOne({
     where: { adminId: data.adminId },
+    attributes: {
+      exclude: ["password"],
+    },
   });
 };
 
 //delete a person
 exports.deleteperson = (data) => {
   return Model.AdminRegister.destroy({
-    where: { name: data.name },
+    where: { adminId: data.adminId },
   });
 };
 
@@ -89,14 +92,14 @@ exports.deleteperson = (data) => {
 
 exports.get = (data) => {
   return Model.AdminRegister.findOne({
-    where: { name: data.name },
+    where: { adminId: data.adminId },
   });
 };
 //block the person
 exports.blockperson = (data) => {
   return Model.AdminRegister.update(
     { Isblocked: 1 },
-    { where: { name: data.name } }
+    { where: { adminId: data.adminId } }
   );
 };
 
@@ -104,22 +107,23 @@ exports.blockperson = (data) => {
 exports.unblockperson = (data) => {
   return Model.AdminRegister.update(
     { Isblocked: 0 },
-    { where: { name: data.name } }
+    { where: { adminId: data.adminId } }
   );
 };
 
 //Edit the user
 exports.edit = (d) => {
   return Model.AdminRegister.update(
-    {     name: d.name,
-      RegistrationPermission: d.RegistrationPermission,
-      BlockedPermission:d.BlockedPermission,
-      UnblockedPermission:d.UnblockedPermission,
-      DeletedPermission:d.DeletedPermission,
-      EditPermission:d.EditPermission,
-      email: d.email, },
     {
-      where: { email: d.email },
+      adminId: d.adminId,
+      RegistrationPermission: d.RegistrationPermission,
+      BlockedPermission: d.BlockedPermission,
+      UnblockedPermission: d.UnblockedPermission,
+      DeletedPermission: d.DeletedPermission,
+      EditPermission: d.EditPermission,
+    },
+    {
+      where: { adminId: d.adminId },
     }
   );
 };
